@@ -1,4 +1,4 @@
-from __future__ import division
+
 from pylab import *
 import utils
 utils.backup(__file__)
@@ -34,14 +34,14 @@ class Experiment_test(AbstractExperiment):
         super(Experiment_test,self).run(sorn)
         c = self.params.c
 
-        print '\n\nTransient...'
+        print('\n\nTransient...')
         sorn.simulation(c.steps_transient)
 
-        print '\n\nExternal Input off:'
+        print('\n\nExternal Input off:')
         sorn.simulation(c.steps_noExternalInput)
 
 
-        print '\n\nExternal Input on'
+        print('\n\nExternal Input on')
 
         # external input definition
         word1 = "A"

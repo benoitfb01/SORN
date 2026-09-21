@@ -1,4 +1,4 @@
-from __future__ import division
+
 import numpy as np
 import utils
 utils.backup(__file__)

@@ -47,15 +47,15 @@ subplot_letter_long = (-0.08, 0.85)
 # Fig. 5A,B: Gaussian noise (power-laws and activity)
 
 experiment_name = 'Gaussian'
-print experiment_name
+print(experiment_name)
 
 for sigma in ['0.005', '0.05', '5']:
 
-    print sigma
+    print(sigma)
     data_all = np.zeros((number_of_files, stable_steps))
     act_density = zeros((number_of_files, 200))
 
-    for data_file in xrange(number_of_files):
+    for data_file in range(number_of_files):
         exper = 'result.h5'
         exper_path =  ''
         h5 = tables.openFile(os.path.join(exper_path,exper),'r')
@@ -63,7 +63,7 @@ for sigma in ['0.005', '0.05', '5']:
         data_all[data_file] = np.around(data.activity[0] \
                                           [transient_steps:]*data.c.N_e)
 
-        for i in xrange(int(stable_steps)):
+        for i in range(int(stable_steps)):
             act_density[data_file, data_all[data_file, i]] += 1
         act_density[data_file, :] /= act_density[data_file, :].sum()
 
@@ -179,7 +179,7 @@ for sigma in ['0.005', '0.05', '5']:
 # Fig. 5C,D: Random Spikes (power-laws and activity)
 
 experiment_name = 'RandomSpikes'
-print experiment_name
+print(experiment_name)
 
 for p in ['000', '005', '010']:
 
@@ -188,11 +188,11 @@ for p in ['000', '005', '010']:
     else:
         number_of_files = 30
 
-    print p
+    print(p)
     data_all = np.zeros((number_of_files, stable_steps))
     act_density = zeros((number_of_files, 200))
 
-    for data_file in xrange(number_of_files):
+    for data_file in range(number_of_files):
         exper = 'result.h5'
         exper_path =  ''
         h5 = tables.openFile(os.path.join(exper_path,exper),'r')
@@ -200,7 +200,7 @@ for p in ['000', '005', '010']:
         data_all[data_file] = np.around(data.activity[0] \
                                           [transient_steps:]*data.c.N_e)
 
-        for i in xrange(int(stable_steps)):
+        for i in range(int(stable_steps)):
             act_density[data_file, data_all[data_file, i]] += 1
         act_density[data_file, :] /= act_density[data_file, :].sum()
 
@@ -376,8 +376,8 @@ fig_5g.annotate('G', xy=subplot_letter_long, xycoords='axes fraction', \
 fig.subplots_adjust(wspace=.25)
 fig.subplots_adjust(hspace=.45)
 
-print 'Saving figures...',
+print('Saving figures...', end=' ')
 result_path = '../../plots/'
 result_name_png = 'Fig5_test.pdf'
 savefig(os.path.join(result_path, result_name_png), format = 'pdf')
-print 'done\n\n'
+print('done\n\n')

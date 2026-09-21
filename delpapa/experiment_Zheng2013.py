@@ -1,4 +1,4 @@
-from __future__ import division
+
 from pylab import *
 import utils
 utils.backup(__file__)

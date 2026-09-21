@@ -47,12 +47,12 @@ c_notstable = '#7887AB'
 
 for experiment_name in ['AllFrozen']:
 
-    print experiment_name
+    print(experiment_name)
     exper_path =''
 
     for regime in ['frozen', 'non-frozen']:
 
-        print '\n', regime
+        print('\n', regime)
         data_all = np.zeros((number_of_files, frozen_steps))
 
         for result_file in range(number_of_files):
@@ -136,11 +136,11 @@ for experiment_name in ['AllFrozen']:
 
 
 transient_steps = 0 # special way to plot an only initialized SORN
-print 'Freezing plasticity in the beginning...'
+print('Freezing plasticity in the beginning...')
 exper_path =''
 for regime in ['frozen']:
 
-    print '\n', regime
+    print('\n', regime)
     data_all = np.zeros((number_of_files, frozen_steps))
 
     for result_file in range(number_of_files):
@@ -219,12 +219,12 @@ frozen_steps = 2e6
 
 for experiment_name in ['IPFrozen', 'AllButIPFrozen']:
 
-    print experiment_name
+    print(experiment_name)
     exper_path =''
 
     for regime in ['frozen']:
 
-        print '\n', regime
+        print('\n', regime)
         data_all = np.zeros((number_of_files, frozen_steps))
 
         for result_file in range(number_of_files):
@@ -255,7 +255,7 @@ for experiment_name in ['IPFrozen', 'AllButIPFrozen']:
 
         if experiment_name == 'IPFrozen':
 
-            print 'Fig. 4C, D...\n'
+            print('Fig. 4C, D...\n')
 
             subplot(223)
 
@@ -373,10 +373,10 @@ fig_4d.annotate('D', xy=subplot_letter, xycoords='axes fraction', \
 fig.subplots_adjust(wspace=.3)
 fig.subplots_adjust(hspace=.3)
 
-print 'Saving figures...',
+print('Saving figures...', end=' ')
 result_path = '../../plots/'
 result_name_png = 'Fig4.pdf'
 savefig(os.path.join(result_path, result_name_png), format = 'pdf')
-print 'done\n\n'
+print('done\n\n')
 
 show()

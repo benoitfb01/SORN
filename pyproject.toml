@@ -1,0 +1,31 @@
+[project]
+name = "sorn-figures-reproduction"
+version = "0.1.0"
+description = "Reproducible Python 3 workflow for Del Papa et al. (2017)"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "criticality-tumbleweed",
+  "h5py>=3.16.0",
+  "ipdb>=0.13.13",
+  "matplotlib>=3.8,<4",
+  "nolds>=0.6.3",
+  "numpy>=1.26,<2",
+  "pandas>=3.0.6",
+  "powerlaw>=1.5",
+  "scikit-learn>=1.4,<2",
+  "scipy>=1.11,<2",
+  "tables>=3.9,<4",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+criticality-tumbleweed = { git = "https://github.com/seacore219/criticality_tumbleweed", rev = "05535e8607269531ce0ef0ce0f8c79516250a1a4" }
+
+[dependency-groups]
+dev = ["pytest>=8,<10"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

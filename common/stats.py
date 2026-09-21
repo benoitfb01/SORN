@@ -1,4 +1,4 @@
-from __future__ import division
+
 from pylab import *
 from utils import DataLog
 try:
@@ -101,7 +101,7 @@ class HistoryStat(AbstractStat):
         try:
             return array(c.history[self.name])
         except ValueError as v:
-            print 'Error in stats.py', v, self.name
+            print('Error in stats.py', v, self.name)
             #~ import pdb
             #~ pdb.set_trace()
 

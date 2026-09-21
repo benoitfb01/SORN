@@ -38,7 +38,7 @@ number_of_files = 2
 ########################################################################
 # Avalanches - Counting Task                                           #
 ########################################################################
-print 'Avalanche distributions for the Counting Task...'
+print('Avalanche distributions for the Counting Task...')
 
 avalanches_steps = 2000000
 number_of_files_trans = number_of_files
@@ -48,7 +48,7 @@ for experiment_folder in ['n4_aval', 'n20_aval']:
     n_trials = number_of_files
     data_all = zeros((n_trials, avalanches_steps))
 
-    for result_file in xrange(n_trials):
+    for result_file in range(n_trials):
 
         exper = 'result.h5'
         exper_path =  ''
@@ -111,7 +111,7 @@ legend(loc=(0.5, 0.8), prop={'size':letter_size}, frameon=False)
 ########################################################################
 # Counting Task - Performance                                          #
 ########################################################################
-print '\nCalculating performance for the Counting Task...'
+print('\nCalculating performance for the Counting Task...')
 
 final_performance_mean = []
 final_performance_std = []
@@ -285,7 +285,7 @@ final_sequence_lengh = [4, 6, 8, 14, 20]
 for experiment_folder in ['n4_andrea', 'n6_andrea', 'n8_andrea', \
                            'n14_andrea', 'n20_andrea']:
 
-    print experiment_folder
+    print(experiment_folder)
 
     partial_performance = np.zeros(number_of_files)
 
@@ -370,7 +370,7 @@ yticks([0.4, 0.6, 0.8, 1.0],\
 ########################################################################
 # Random Task - Avalanches                                             #
 ########################################################################
-print 'Calculating avalanche distributions for the Random Task...'
+print('Calculating avalanche distributions for the Random Task...')
 
 avalanches_steps = 2000000
 number_of_files_trans = number_of_files
@@ -380,7 +380,7 @@ for experiment_folder in ['L10', 'L20', 'L100']:
     n_trials = number_of_files
     data_all = zeros((n_trials, avalanches_steps))
 
-    for result_file in xrange(n_trials):
+    for result_file in range(n_trials):
 
         exper = 'result.h5'
         exper_path =  ''
@@ -453,7 +453,7 @@ legend(loc=(0.5, 0.75), prop={'size':letter_size}, frameon=False)
 ########################################################################
 # Random Task - Performance                                            #
 ########################################################################
-print '\nCalculating performance for the Random Task...'
+print('\nCalculating performance for the Random Task...')
 
 final_performance_mean = []
 final_performance_std = []
@@ -560,7 +560,7 @@ fig_7f.annotate('F', xy=subplot_letter, xycoords='axes fraction', \
                 fontsize=letter_size_panel ,  fontweight='bold', \
                 horizontalalignment='right', verticalalignment='bottom')
 
-print 'Saving figures...',
+print('Saving figures...', end=' ')
 result_path = '../../plots/'
 result_name_png = 'Fig7.pdf'
 savefig(os.path.join(result_path, result_name_png), format = 'pdf')

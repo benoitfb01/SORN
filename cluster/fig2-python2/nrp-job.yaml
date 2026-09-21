@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: charlesd-sorn-fig2-n200
+  namespace: hengenlab
+spec:
+  # The paper's Fig. 2 analysis averages 50 realizations for each N_e.
+  # Only N_e=200 is requested here.
+  completionMode: Indexed
+  completions: 50
+  parallelism: 10
+  # NRP currently supports per-index retry accounting. A failed realization
+  # can retry twice without consuming one global retry budget for all 50.
+  backoffLimitPerIndex: 2
+  maxFailedIndexes: 5
+  template:
+    metadata:
+      labels:
+        app: sorn-fig2-python2
+    spec:
+      restartPolicy: Never
+      # rook-cephfs is the US West CephFS class. Keeping compute in-region
+      # avoids cross-region I/O for the persistent HDF5 output.
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: topology.kubernetes.io/region
+                    operator: In
+                    values:
+                      - us-west
+      containers:
+        - name: sorn
+          image: seacore219/sorn-fig2-py2:cdad55d
+          imagePullPolicy: Always
+          env:
+            - name: JOB_COMPLETION_INDEX
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.annotations['batch.kubernetes.io/job-completion-index']
+          resources:
+            requests:
+              cpu: "1"
+              memory: 3Gi
+              ephemeral-storage: 4Gi
+            limits:
+              cpu: "1"
+              memory: 3Gi
+              ephemeral-storage: 4Gi
+          volumeMounts:
+            - name: fig2-results
+              mountPath: /opt/sorn/backup
+      volumes:
+        - name: fig2-results
+          persistentVolumeClaim:
+            claimName: charlesd-sorn-fig2-py2-storage

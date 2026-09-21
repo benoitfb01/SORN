@@ -1,4 +1,4 @@
-from __future__ import division
+
 from pylab import *
 #imports for file handling:
 #~ import random
@@ -7,6 +7,7 @@ from os.path import *
 import shutil
 import datetime
 import time
+import numpy as np
 try:
     from mpi4py import MPI
     imported_mpi = True
@@ -29,6 +30,7 @@ dest_string = "../backup"
 curr_directory = None
 dest_directory = None
 initialized = False
+backup_enabled = False
 
 copied_files = []
 
@@ -40,9 +42,10 @@ def initialise_backup(mount=None,dest=None):
     utils.backup()
     This does not need to be called when using the default locations
     """
-    global curr_string, dest_string
+    global curr_string, dest_string, backup_enabled
     curr_string = mount
     dest_string = dest
+    backup_enabled = True
 
 def _initialize(filename):
     #initialize should only get called once; by the first call to utils.start
@@ -58,7 +61,7 @@ def _initialize(filename):
         try:
             os.makedirs(dest_directory)
         except OSError as e:
-            print e
+            print(e)
     #calc curr_directory
     curr_directory = abspath(expanduser(curr_string))
     initialized = True
@@ -90,12 +93,12 @@ def copy(filename):
         try:
             os.makedirs(final_dir)
         except OSError as e:
-            print e
+            print(e)
     #Now copy!
     try:
         shutil.copy2(filename,final_filename)
     except OSError as e:
-        print e
+        print(e)
 
 def copy_source(filename):
     if filename[-1]=='c':  #Cheap hack to exclude saving pyc files
@@ -110,7 +113,7 @@ def copy_directory(src):
     try:
         shutil.copytree(src,final_dir,symlinks=True)
     except OSError as e:
-        print e
+        print(e)
 
 def backup(filename, start_seed=None):
     """The first time backup() is called, it notes the time and creates a
@@ -120,6 +123,11 @@ def backup(filename, start_seed=None):
 
     Successive calls to backup() result in only the source code being
     copied."""
+
+    # Most modules call backup() at import time. Keep imports side-effect free;
+    # the legacy runner explicitly enables backups with initialise_backup().
+    if not backup_enabled:
+        return
 
     if not initialized:
         _initialize(filename)
@@ -132,24 +140,23 @@ def backup(filename, start_seed=None):
         if start_seed == None:
             start_seed = current_time_int*(rank + 1)
 
-        seed(start_seed)
+        np.random.seed(start_seed)
         if rank == 0:
             try:
-                f = file(logfilename("seed"),'w')
-                f.write(str(start_seed))
-                f.close()
+                with open(logfilename("seed"), "w") as seed_file:
+                    seed_file.write(str(start_seed))
             except OSError as e:
-                print e
+                print(e)
     copy_source(filename)
 
 def logfilename(filename):
     if not initialized:
-        print "Error - Script has not been backed up!"
+        print("Error - Script has not been backed up!")
         return filename
     #Calc file location and destination
     abs_filename = abspath(filename)
     if not abs_filename.startswith(curr_directory):
-        print "Error - trying to backup file above main directory?!?"
+        print("Error - trying to backup file above main directory?!?")
         return filename
     reduced_filename = abs_filename[len(curr_directory)+1:]
     #Make the directory if necessary
@@ -159,7 +166,7 @@ def logfilename(filename):
         try:
             os.makedirs(final_dir)
         except OSError as e:
-            print e
+            print(e)
     return final_filename
 
 def saveplot(figurename, f = None):

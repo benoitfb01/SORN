@@ -1,10 +1,10 @@
-from __future__ import division
+
 from pylab import *
 import random
 import itertools
 import utils
 utils.backup(__file__)
-import synapses
+from . import synapses
 
 class AbstractSource(object):
     def __init__(self):
@@ -12,7 +12,7 @@ class AbstractSource(object):
         Initialize all relevant variables.
         """
         raise NotImplementedError
-    def next(self):
+    def __next__(self):
         """
         Returns the next input
         """
@@ -78,11 +78,14 @@ class CountingSource(AbstractSource):
         self.N_u_e = int(N_u_e)  #Number active per step
         self.N_u_i = int(N_u_i)
         self.avoid = avoid
-        self.alphabet = unique("".join(words))
+        # ``pylab.unique`` changed semantics after this Python 2-era code was
+        # written and now treats the joined string as one value.  Build the
+        # character alphabet explicitly so every input symbol is addressable.
+        self.alphabet = np.asarray(sorted(set("".join(words))))
         self.N_a = len(self.alphabet)
-        self.lookup = dict(zip(self.alphabet,range(self.N_a)))
+        self.lookup = dict(list(zip(self.alphabet,list(range(self.N_a)))))
         self.glob_ind = [0]
-        self.glob_ind.extend(cumsum(map(len,words)))
+        self.glob_ind.extend(cumsum(list(map(len,words))))
         self.predict = self.predictability()
         self.reset()
 
@@ -140,7 +143,7 @@ class CountingSource(AbstractSource):
 
         available = set(range(N_e))
         for a in range(self.N_a):
-            temp = random.sample(available,self.N_u_e)
+            temp = random.sample(list(available), self.N_u_e)
             W[temp,a] = 1
             if self.avoid:
                 available = available.difference(temp)
@@ -166,7 +169,7 @@ class CountingSource(AbstractSource):
         if N_i>0:
             available = set(range(N_i))
             for a in range(self.N_a):
-                temp = random.sample(available,self.N_u_i)
+                temp = random.sample(list(available), self.N_u_i)
                 W[temp,a] = 1
                 #~ if self.avoid: # N_i is much smaller -> broad inhibition?
                     #~ available = available.difference(temp)
@@ -183,18 +186,15 @@ class CountingSource(AbstractSource):
 
     def index(self):
         character = self.char()
-
-        import ipdb; ipdb.set_trace()
-        ind = self.lookup[character]
-        return ind
+        return self.lookup[character]
 
     def next_word(self):
         self.ind = 0
         w = self.word_index
         p = self.probs[w,:]
-        self.word_index = find(rand()<=cumsum(p))[0]
+        self.word_index = np.flatnonzero(rand() <= cumsum(p))[0]
 
-    def next(self):
+    def __next__(self):
         self.ind = self.ind+1
         string = self.words[self.word_index]
         if self.ind >= len(string):
@@ -225,7 +225,7 @@ class CountingSource(AbstractSource):
             temp = temp.dot(temp)
         final = temp[0,:]
         #Let's assume that all words have unique initial letters
-        probs = map(len, self.words)
+        probs = list(map(len, self.words))
         probs = array(probs)
         probs = (probs + self.probs.max(1)-1)/probs
         return sum(final*probs)
@@ -256,15 +256,15 @@ class TrialSource(AbstractSource):
         else:
             self.blank_length = self.blank_min_length
 
-    def next(self):
+    def __next__(self):
         if not self.source.trial_finished():
-            return self.source.next()
+            return next(self.source)
         else:
             if self.blank_step >= self.blank_length:
                 self.blank_step = 0
                 self._reset_source()
                 self.reset_blank_length()
-                return self.source.next()
+                return next(self.source)
             else:
                 self.blank_step += 1
                 return self.defaultstim
@@ -322,10 +322,10 @@ class AndreeaCountingSource(AbstractSource):
             self.alphabet = 'ABCDEMNX'
             self.words = ['AXXXXXM','BXXXXXN','CXXXXXN','CXXXXXM','DXXXXXN','DXXXXXM','EXXXXXN','EXXXXXM']
             self.glob_ind = [0]
-            self.glob_ind.extend(cumsum(map(len,self.words)))
+            self.glob_ind.extend(cumsum(list(map(len,self.words))))
         self.N_a = self.seq.max()+1
 
-    def next(self):
+    def __next__(self):
         self.t += 1
         tmp = zeros((self.N_a))
         tmp[self.seq[self.t]] = 1
@@ -361,7 +361,7 @@ class NoSource(AbstractSource):
     """
     def __init__(self,N_i=1):
         self.N_i = N_i
-    def next(self):
+    def __next__(self):
         return np.zeros((self.N_i))
 
     def global_range(self):
@@ -406,7 +406,7 @@ class RandomSource(AbstractSource):
         self.N = N_neurons
         self.density = connection_density
         self.eta_stdp = eta_stdp
-    def next(self):
+    def __next__(self):
         return rand(self.N)<=self.rate
     def global_range(self):
         return 1

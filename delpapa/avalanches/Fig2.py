@@ -48,7 +48,7 @@ stable_steps = 3e6 # steps to use: after transient (2e6)
 THETA = 'half'
 
 #count files
-print 'Loading experiment files...'
+print('Loading experiment files...')
 exper_path = ''
 
 #load the data in 'data_all'
@@ -68,7 +68,7 @@ T_data, S_data = analysis.avalanches(data_all, \
 ########################################
 ### duration stuff
 fig_2a = subplot(gs[0])
-print 'Fig. 2A...'
+print('Fig. 2A...')
 
 # raw data
 T_x, inverse = unique(T_data, return_inverse=True)
@@ -119,7 +119,7 @@ fig_2a.get_legend().get_title().set_fontsize(letter_size)
 #########################################
 ### size stuff
 fig_2b = subplot(gs[1])
-print 'Fig. 2B...'
+print('Fig. 2B...')
 
 # raw data
 S_x, inverse = unique(S_data, return_inverse=True)
@@ -152,19 +152,19 @@ S_fit.truncated_power_law.plot_pdf(color=c_expcut,\
 #      The distributions with 2 parameters have, of course,
 #      a better fit: lognormal, truncated_exponential
 
-print '\n\n Duration (T): \n Exp: ', \
+print('\n\n Duration (T): \n Exp: ', \
        T_fit.distribution_compare('power_law','exponential', \
                                                 normalized_ratio=True),\
        '\n Str. Exp: ', \
        T_fit.distribution_compare('power_law','stretched_exponential',\
-                                                  normalized_ratio=True)
+                                                  normalized_ratio=True))
 
-print '\n\n Size (S): \n Exp: ', \
+print('\n\n Size (S): \n Exp: ', \
        S_fit.distribution_compare('power_law','exponential',\
                                                 normalized_ratio=True),\
        '\n Str. Exp: ',\
        S_fit.distribution_compare('power_law','stretched_exponential',\
-                                                  normalized_ratio=True)
+                                                  normalized_ratio=True))
 
 ########################################################################
 
@@ -195,7 +195,7 @@ fig_2b.get_legend().get_title().set_fontsize(letter_size)
 ########################################################################
 # Fig. 1C: ratio between exponents
 
-print 'Fig 2C...'
+print('Fig 2C...')
 fig_2c = subplot(gs[2])
 
 # plot experimental ratio
@@ -244,7 +244,7 @@ del a_dur_avg, a_area_avg, T_data, S_data # to save memory
 # Fig. 1D and 1E SORN size and duration with exponents (A and B)
 variable = 'N'; values = ['50', '100', '200', '400', '800']
 
-print 'Fig 2D...'
+print('Fig 2D...')
 fig_2d = subplot(gs[3])
 for v in values:
 
@@ -257,7 +257,7 @@ for v in values:
         data = h5.root
         data_all[result_file] = \
                   np.around(data.activity[0][-stable_steps:]*data.c.N_e)
-	h5.close()
+    h5.close()
 
     # calculate duration and area of avalanches
     a_dur, a_area = analysis.avalanches(data_all, variable, v, \
@@ -287,7 +287,7 @@ yticks([1, 0.01, 0.0001, 0.000001], \
 
 
 ############################3
-print 'Fig 2E...'
+print('Fig 2E...')
 fig_2e = subplot(gs[4])
 for v in values:
 
@@ -300,7 +300,7 @@ for v in values:
         data = h5.root
         data_all[result_file] = \
                   np.around(data.activity[0][-stable_steps:]*data.c.N_e)
-	h5.close()
+    h5.close()
 
     # calculate duration and area of avalanches
     a_dur, a_area = analysis.avalanches(data_all, variable, v, \
@@ -343,7 +343,7 @@ del a_dur, a_area # just to save memory
 
 ########################################################################
 # Fig. 2F - Window of power-laws X network size
-print 'Fig 2F...'
+print('Fig 2F...')
 fig_2f = subplot(gs[5])
 net_sizes = np.array([50, 100, 200, 400, 800])
 
@@ -411,8 +411,8 @@ fig.subplots_adjust(wspace=.5)
 fig.subplots_adjust(hspace=.65)
 
 # saving figures
-print 'Saving figures...',
+print('Saving figures...', end=' ')
 result_path = '../../plots'
 result_name_png = 'Fig2.pdf'
 savefig(os.path.join(result_path, result_name_png), format='pdf')
-print 'done\n\n'
+print('done\n\n')

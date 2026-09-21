@@ -15,7 +15,7 @@ try:
     imported_mpi = True
 except ImportError:
     imported_mpi = False
-from autotable import AutoTable
+from .autotable import AutoTable
 
 #Quickly patch the code for mpi
 def only_root(fn):
@@ -40,9 +40,7 @@ def pprint(obj="", end='\n'):
 #=============================================================================
 # DataHandler (AbstractBaseClass)
 
-class DataHandler(object):
-    __metaclass__ = ABCMeta
-
+class DataHandler(object, metaclass=ABCMeta):
     """ Base class for handler which can be set to handle incoming data by DataLog."""
     def __init__(self):
         pass
@@ -56,7 +54,7 @@ class DataHandler(object):
         pass
 
     def extend(self, valdict):
-        for key, val in valdict.items():
+        for key, val in list(valdict.items()):
             self.append(key, val)
 
     def remove(self, tblname):
@@ -172,12 +170,12 @@ class DataLog:
     def progress(self, message, completed=None):
         """ Append some progress message """
         if completed == None:
-            print "[%s] %s" % (strftime("%H:%M:%S"), message)
+            print("[%s] %s" % (strftime("%H:%M:%S"), message))
         else:
             totlen = 65-len(message)
             barlen = int(totlen*completed)
             spacelen = totlen-barlen
-            print "[%s] %s [%s%s]" % (strftime("%H:%M:%S"), message, "*"*barlen, "-"*spacelen)
+            print("[%s] %s [%s%s]" % (strftime("%H:%M:%S"), message, "*"*barlen, "-"*spacelen))
 
     @only_root
     def append(self, tblname, value):
@@ -194,7 +192,7 @@ class DataLog:
         """
         # Construct a set with all handlers to be called
         all_handlers = set()
-        for tblname, val in valdict.items():
+        for tblname, val in list(valdict.items()):
             hl = self._lookup(tblname)
             all_handlers = all_handlers.union(hl)
 
@@ -203,7 +201,7 @@ class DataLog:
         # is interested in
         for handler in all_handlers:
             argdict = {}
-            for tblname, val in valdict.items():
+            for tblname, val in list(valdict.items()):
                 hl = self._lookup(tblname)
 
                 if handler in hl:

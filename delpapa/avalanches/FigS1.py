@@ -36,7 +36,7 @@ stable_steps = 3e6 # steps to use: after transient (2e6)
 THETA = 'half'
 
 #count files
-print 'Loading experiment files...'
+print('Loading experiment files...')
 exper_path = ''
 
 #load the data in 'data_all'
@@ -102,7 +102,7 @@ stable_steps = 3e6 # steps to use: after transient (2e6)
 THETA = 'half'
 
 #count files
-print 'Loading experiment files...'
+print('Loading experiment files...')
 exper_path = ''
 
 #load the data in 'data_all'
@@ -168,7 +168,7 @@ fig_S1b.annotate('B', xy=subplot_letter, xycoords='axes fraction', \
                 fontsize=letter_size_panel,  fontweight='bold', \
                 horizontalalignment='right', verticalalignment='bottom')
 
-print 'Saving figures...',
+print('Saving figures...', end=' ')
 result_path = '../../plots'
 result_name_png = 'FigS1.pdf'
 savefig(os.path.join(result_path, result_name_png), format = 'pdf')

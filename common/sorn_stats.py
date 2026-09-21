@@ -1,15 +1,15 @@
-from __future__ import division
+
 from pylab import *
 
 import utils
 utils.backup(__file__)
 
-from stats import AbstractStat
-from stats import HistoryStat
-from stats import _getvar
+from .stats import AbstractStat
+from .stats import HistoryStat
+from .stats import _getvar
 from common.sources import TrialSource
 
-import cPickle as pickle
+import pickle as pickle
 import gzip
 
 def load_source(name,c):
@@ -50,7 +50,7 @@ def characteristic_path_length(graph_matrix):
     # Doesn't matter because it's ALL pairs shortest path
     distances = all_pairs_shortest_path(graph_matrix.T)
     if any(distances == N*N):
-        print 'DISCONNECTED ELEMENTS'
+        print('DISCONNECTED ELEMENTS')
     # don't look at disconnected elements
     distances[distances==N*N] = 0
     average_length = sum(distances[distances>0]*1.0)\
@@ -119,14 +119,14 @@ class ActivityStat(AbstractStat):
         self.name = 'activity'
         self.collection = 'gather'
     def clear(self,c,sorn):
-        if sorn.c.stats.has_key('only_last'):
+        if 'only_last' in sorn.c.stats:
             c.activity = zeros(sorn.c.stats.only_last\
                                  +sorn.c.stats.only_last)
         else:
             c.activity = zeros(sorn.c.N_steps)
         self.step = 0
     def add(self,c,sorn):
-        if sorn.c.stats.has_key('only_last'):
+        if 'only_last' in sorn.c.stats:
             new_step = self.step - (sorn.c.N_steps\
                                     -sorn.c.stats.only_last)
             if new_step >= 0:
@@ -207,14 +207,14 @@ class InputIndexStat(AbstractStat):
         self.name = 'InputIndex'
         self.collection = 'gather'
     def clear(self,c,sorn):
-        if sorn.c.stats.has_key('only_last'):
+        if 'only_last' in sorn.c.stats:
             c.inputindex = zeros(sorn.c.stats.only_last\
                                  +sorn.c.stats.only_last)
         else:
             c.inputindex = zeros(sorn.c.N_steps)
         self.step = 0
     def add(self,c,sorn):
-        if sorn.c.stats.has_key('only_last'):
+        if 'only_last' in sorn.c.stats:
             new_step = self.step - (sorn.c.N_steps\
                                     -sorn.c.stats.only_last)
             if new_step >= 0:
@@ -271,7 +271,7 @@ class NormLastStat(AbstractStat):
         input_spikes = input_spikes[:,input_index != -1]
         input_index = input_index[input_index != -1]
 
-        if sorn.c.stats.has_key('only_last'):
+        if 'only_last' in sorn.c.stats:
             N_comparison = sorn.c.stats.only_last
         else:
             N_comparison = 2500
@@ -343,14 +343,14 @@ class SpontPatternStat(AbstractStat):
         # Find for each spontaneous state the evoked state with the
         # smallest hamming distance and store the corresponding index
         similar_input = zeros(N_comp_spont)
-        for i in xrange(N_comp_spont):
+        for i in range(N_comp_spont):
             most_similar = argmin(sum(abs(norm_last_input_spikes.T\
                                 -last_spont_spikes[:,i]),axis=1))
             #~ most_similar = argmax(norm_last_input_spikes.T.dot(\ # TODO check this
                                   #~ last_spont_spikes[:,i]))
             similar_input[i] = norm_last_input_index[most_similar]
         # Count the number of spontaneous states for each index and plot
-        index = range(maxindex+1)
+        index = list(range(maxindex+1))
         if self.collection == 'gatherv':
             adding = 2
         else:
@@ -370,7 +370,7 @@ class SpontPatternStat(AbstractStat):
         allpatterns = array(patterns.tolist()+rev_patterns.tolist())
         for (i,p) in enumerate(allpatterns):
             patternlen = len(p)
-            for j in xrange(N_comp_spont-maxlen):
+            for j in range(N_comp_spont-maxlen):
                 if all(similar_input[j:j+patternlen] == p):
                     pattern_freqs[1,i] += 1
         # Marker for end of freqs
@@ -614,7 +614,7 @@ class AttractorDynamicsStat(AbstractStat):
             tmp = sum(c.inputi_test == i)
             if min_trials > tmp:
                 min_trials = tmp
-        decisions = np.zeros((N_words,word_length,min_trials),dtype=np.bool)
+        decisions = np.zeros((N_words, word_length, min_trials), dtype=bool)
         seq_count = np.zeros((N_words,4))
 
 
@@ -650,7 +650,7 @@ class AttractorDynamicsStat(AbstractStat):
             seq_count[i,3] = sum(sum(decisions[i],0)==0)
 
 
-        print seq_count # TODO do something with this
+        print(seq_count) # TODO do something with this
         bayes_stat.pred_pos = pred_pos_old
         bayes_stat.report(c,sorn)
         return output_dist
@@ -871,7 +871,7 @@ class SpontBayesStat(AbstractStat):
                         sum(tmp_cue[:,1==sorn.W_eu.W[:,
                                       source.lookup['B']]],1))).T
             tmp_gain = raw_predictions[pred_indices,:]
-            if cue_act.has_key(i):
+            if i in cue_act:
                 cue_act[i] = np.append(cue_act[i],tmp_cue,axis=0)
                 pred_gain[i] = np.append(pred_gain[i],tmp_gain,axis=0)
             else:
@@ -966,7 +966,7 @@ class EvokedPredStat(AbstractStat):
                     classifier = lstsq_reg(sp_train,Xt_train,sorn.c.stats.lstsq_mue)
                     classifier_base = lstsq_reg(base_train,Xt_train,sorn.c.stats.lstsq_mue)
                 except LinAlgError: # TODO not necessary anymore?!
-                    print 'Error in EvokedPredStat'
+                    print('Error in EvokedPredStat')
                     N = shape(Xt_test)[1]
                     classifier = zeros((N,N))
                 Xt_pred = sp_test.dot(classifier)
@@ -1010,7 +1010,7 @@ class SpikesStat(AbstractStat):
             self.neurons = sorn.c.N_i
         else:
             self.neurons = sorn.c.N_e
-        if sorn.c.stats.has_key('only_last_spikes'):
+        if 'only_last_spikes' in sorn.c.stats:
             steps = sorn.c.stats.only_last_spikes
             c[self.sattr] = zeros((self.neurons,steps))
         else:
@@ -1021,7 +1021,7 @@ class SpikesStat(AbstractStat):
             spikes = sorn.y
         else:
             spikes = sorn.x
-        if sorn.c.stats.has_key('only_last_spikes'):
+        if 'only_last_spikes' in sorn.c.stats:
             new_step = self.step - (sorn.c.N_steps\
                                     -sorn.c.stats.only_last_spikes)
             if new_step >= 0:
@@ -1044,7 +1044,7 @@ class SpikesInhStat(AbstractStat):
         self.collection = 'gather'
     def clear(self,c,sorn):
         self.neurons = sorn.c.N_i
-        if sorn.c.stats.has_key('only_last_spikes'):
+        if 'only_last_spikes' in sorn.c.stats:
             steps = sorn.c.stats.only_last_spikes
             c[self.sattr] = zeros((self.neurons,steps))
         else:
@@ -1052,7 +1052,7 @@ class SpikesInhStat(AbstractStat):
         self.step = 0
     def add(self,c,sorn):
         spikes_ihn = sorn.y
-        if sorn.c.stats.has_key('only_last_spikes'):
+        if 'only_last_spikes' in sorn.c.stats:
             new_step = self.step - (sorn.c.N_steps\
                                     -sorn.c.stats.only_last_spikes)
             if new_step >= 0:
@@ -1082,10 +1082,10 @@ class CondProbStat(AbstractStat):
         spikes = c.spikes[:,-steps:]
         N = shape(spikes)[0] # number of neurons
         condspikes = np.zeros((N,N))
-        for t in xrange(1,steps):
+        for t in range(1,steps):
             condspikes[spikes[:,t]==1,:] += spikes[:,t-1]
         spike_sum = sum(spikes,1)
-        for i in xrange(N):
+        for i in range(N):
             condspikes[i,:] /= spike_sum
         return condspikes
 
@@ -1187,13 +1187,13 @@ class ISIsStat(AbstractStat):
     def add(self,c,sorn):
         if ((self.step > self.interval[0] and
              self.step < self.interval[1]) and
-             ((not sorn.c.stats.has_key('only_last_spikes'))
+             (('only_last_spikes' not in sorn.c.stats)
                 or (self.step > sorn.c.stats.only_last_spikes))):
             spikes = sorn.x[self.mask]
             self.isis[spikes==0] += 1
             isis_tmp = self.isis[spikes==1]
             isis_tmp = isis_tmp[isis_tmp<100]
-            tmp = zip(where(spikes==1)[0],isis_tmp.astype(int))
+            tmp = list(zip(where(spikes==1)[0],isis_tmp.astype(int)))
             for pair in tmp:
                 self.ISIs[pair] += 1 #there must be a prettier solution TODO
             #~ self.ISIs[tmp]+=1
@@ -1227,13 +1227,13 @@ class ConnectionFractionStat(AbstractStat):
         self.collection = 'gather'
     def clear(self,c,sorn):
         self.step = 0
-        if sorn.c.stats.has_key('only_last'):
+        if 'only_last' in sorn.c.stats:
             self.cf = zeros(sorn.c.stats.only_last\
                             +sorn.c.stats.only_last)
         else:
             self.cf = zeros(sorn.c.N_steps)
     def add(self,c,sorn):
-        if sorn.c.stats.has_key('only_last'):
+        if 'only_last' in sorn.c.stats:
             new_step = self.step \
                         - (sorn.c.N_steps-sorn.c.stats.only_last)
             if new_step >= 0:
@@ -1262,7 +1262,7 @@ class ConnectionFractionStat(AbstractStat):
                                         /(sorn.c.N_e*sorn.c.N_e)
         self.step += 1
     def report(self,c,sorn):
-        print '\n Report(ed) Connectionfraction'
+        print('\n Report(ed) Connectionfraction')
         return self.cf
 
 # TODO rewrite nicer for SPARSE
@@ -1403,7 +1403,7 @@ class SmallWorldStat(AbstractStat):
     def add(self,c,sorn):
         pass
     def report(self,c,sorn):
-        print 'Report Smallworld'
+        print('Report Smallworld')
         if sorn.c.stats.rand_networks <= 0:
             return np.array([])
         if sorn.c.W_ee.use_sparse:
@@ -1424,7 +1424,7 @@ class SmallWorldStat(AbstractStat):
         delete_diagonal = np.ones((N,N))
         for i in range(N):
             delete_diagonal[i,i] = 0
-        print ''
+        print('')
         for i in range(num_rand):
             sys.stdout.write('\rRand Graph No.%3i of %3i'%(i+1,\
                                                             num_rand))
@@ -1441,7 +1441,7 @@ class SmallWorldStat(AbstractStat):
         gamma = C/C_r
         lam = L/L_r
         S_w = gamma/lam
-        print 'Reported smallworld'
+        print('Reported smallworld')
         return np.array([gamma, lam, S_w])
 
 class ParamTrackerStat(AbstractStat):
@@ -1537,8 +1537,8 @@ class SVDStat_U(AbstractStat):
         similar_input = zeros((rec_steps,sorn.c.N_e))
         N_indices = max(c.norm_last_input_index)+1
         indices = [where(c.norm_last_input_index==i)[0] for i in range(int(N_indices))]
-        for s in xrange(rec_steps):
-            for i in xrange(sorn.c.N_e):
+        for s in range(rec_steps):
+            for i in range(sorn.c.N_e):
                 # U transforms back to "spike space"
                 # Check for best similarities
                 # Convolution works best:
@@ -1562,8 +1562,8 @@ class SVDStat_V(AbstractStat):
         similar_input = zeros((rec_steps,sorn.c.N_e))
         N_indices = max(c.norm_last_input_index)+1
         indices = [where(c.norm_last_input_index==i)[0] for i in range(int(N_indices))]
-        for s in xrange(rec_steps):
-            for i in xrange(sorn.c.N_e):
+        for s in range(rec_steps):
+            for i in range(sorn.c.N_e):
                 # V transforms input by taking product
                 # Do same here and look which spike vector works best
                 #~ overlaps = c.norm_last_input_spikes.T.dot(c.SVD_V[s,:,i])

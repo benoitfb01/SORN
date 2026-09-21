@@ -38,7 +38,7 @@ subplot_letter = (-0.15, 0.9)
 
 for regime in possible_regimes:
 
-    print '\n', regime, '...'
+    print('\n', regime, '...')
 
 
 
@@ -54,7 +54,7 @@ for regime in possible_regimes:
         data_all = zeros((n_trials, section_steps))
 
 
-    for result_file in xrange(n_trials):
+    for result_file in range(n_trials):
 
         exper = 'result.h5'
         exper_path =  ''
@@ -83,14 +83,14 @@ for regime in possible_regimes:
     ### Fig3 : Plot activity distribution
     figure(3)
     act_density = zeros((number_of_files, data_all.max()+1))
-    for data_file in xrange(number_of_files):
+    for data_file in range(number_of_files):
 
         steps = section_steps
         if regime == 'extrainput_start':
             steps = extrainput_steps
         if regime == 'extrainput_end':
             steps = section_steps-extrainput_steps
-        for i in xrange(int(steps)):
+        for i in range(int(steps)):
             act_density[data_file, data_all[data_file, i]] += 1
         act_density[data_file, :] /= act_density[data_file, :].sum()
 
@@ -102,8 +102,8 @@ for regime in possible_regimes:
     if regime == 'extrainput_end':
         plot(act_density_mean, 'g')
 
-    print 'Mean =', data_all.mean()
-    print 'Std =', data_all.std()
+    print('Mean =', data_all.mean())
+    print('Std =', data_all.std())
 
     if regime == 'normal':
         Thres_normal = int(data_all.mean()/2.) + 1 # rounding purposes
@@ -265,7 +265,7 @@ fig_6b.annotate('B', xy=subplot_letter, xycoords='axes fraction', \
 gcf().subplots_adjust(bottom=0.17)
 fig_6.subplots_adjust(wspace=.4)
 
-print 'Saving figures...',
+print('Saving figures...', end=' ')
 result_path = '../../plots/'
 result_name_png = 'Fig6.pdf'
 savefig(os.path.join(result_path, result_name_png), format = 'pdf')

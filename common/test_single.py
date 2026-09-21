@@ -1,4 +1,4 @@
-from __future__ import division # has to be imported in every file
+ # has to be imported in every file
 #~ import matplotlib # if from ssh
 #~ matplotlib.use('Agg')
 import ipdb # prettier debugger
@@ -15,14 +15,14 @@ utils.backup(__file__)
 from utils.backup import dest_directory
 from common.stats import StatsCollection
 from common.sorn import Sorn
-import cPickle as pickle
+import pickle as pickle
 import gzip
 import numpy as np
 import matplotlib.pyplot as plt
 
 # Start debugging mode when an error is raised
 def debugger(type,flag):
-    print 'In debugger!'
+    print('In debugger!')
     pass
     # import ipdb
     # ipdb.set_trace()

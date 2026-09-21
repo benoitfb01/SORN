@@ -1,4 +1,4 @@
-from __future__ import division
+
 from pylab import *
 import numpy as np
 import scipy.sparse as sp
@@ -169,18 +169,18 @@ class FullSynapticMatrix(AbstractSynapticMatrix):
 
     def prune_weights(self):
         c = self.c
-        if c.has_key('no_lower_bound') and c.no_lower_bound:
+        if 'no_lower_bound' in c and c.no_lower_bound:
             return
         self.W[self.W<0.0] = 0.0
-        if c.has_key('upper_bound'):
+        if 'upper_bound' in c:
             self.W[self.W > c.upper_bound] = c.upper_bound
-        if c.has_key('no_prune') and c.no_prune:
+        if 'no_prune' in c and c.no_prune:
             return
         self.M[self.W<=0.0] = False
 
     def struct_p(self):
         c = self.c
-        if c.has_key('sp_prob') and np.random.rand() < c.sp_prob:
+        if 'sp_prob' in c and np.random.rand() < c.sp_prob:
             (i,j) = _find_new(self.W,c.avoid_self_connections)
 
             self.W[i,j] = c.sp_initial
@@ -188,7 +188,7 @@ class FullSynapticMatrix(AbstractSynapticMatrix):
 
     def stdp(self,from_old,from_new,to_old=None,to_new=None):
         c = self.c
-        if not c.has_key('eta_stdp'):
+        if 'eta_stdp' not in c:
             return
 
         if to_old is None:
@@ -211,7 +211,7 @@ class FullSynapticMatrix(AbstractSynapticMatrix):
 
     def istdp(self,y_old,x):
         c = self.c
-        if not c.has_key('eta_istdp'):
+        if 'eta_istdp' not in c:
             return
         self.W[self.M] += -c.eta_istdp*((1-(x[:,None]*(1+1.0/c.h_ip)))\
                                         *y_old[None,:])[self.M]
@@ -222,7 +222,7 @@ class FullSynapticMatrix(AbstractSynapticMatrix):
 
     def istdp_pos(self,y_old,x):
         c = self.c
-        if not c.has_key('eta_istdp'):
+        if 'eta_istdp' not in c:
             return
         self.W[self.M] += c.eta_istdp*((1-x[:,None])\
                                        *y_old[None,:])[self.M]
@@ -253,15 +253,15 @@ class FullSynapticMatrix(AbstractSynapticMatrix):
         eps = 1e-6
         Z = self.W.sum(1)
         if any(abs(Z-1.0)>eps):
-            print shape(self.W)
-            print self.W.sum(0)
-            print self.W.sum(1)
+            print(shape(self.W))
+            print(self.W.sum(0))
+            print(self.W.sum(1))
             ind = abs(Z-1.0)>eps
-            print find(ind)
-            print ("Difference from 1:",Z[ind]-1.0)
+            print(find(ind))
+            print(("Difference from 1:",Z[ind]-1.0))
             self.ss()
             Z = self.W.sum(1)
-            print ("Difference after trying to fix it:",Z[ind]-1.0)
+            print(("Difference after trying to fix it:",Z[ind]-1.0))
 
         assert np.all(self.W >= 0.0)
         assert np.all(self.W <= 1.0)
@@ -292,14 +292,14 @@ class SparseSynapticMatrix(AbstractSynapticMatrix):
             ns[ns==0] = rv.rvs(num)
             if all(ns>0):
                 break
-        W_dok = sp.dok_matrix( shape, dtype=np.float)
+        W_dok = sp.dok_matrix(shape, dtype=float)
 
         if c.avoid_self_connections:
-            j_s = range(N-1)
+            j_s = list(range(N-1))
             ns -= 1
             ns[ns<=0] = 1
         else:
-            j_s = range(N)
+            j_s = list(range(N))
 
         for i in range(M):
             data = np.random.rand(ns[i])
@@ -319,24 +319,24 @@ class SparseSynapticMatrix(AbstractSynapticMatrix):
 
 
         if not self.sane_after_update():
-            print "NOT SANE IN INIT"
+            print("NOT SANE IN INIT")
 
     def prune_weights(self):
         c = self.c
-        if c.has_key('no_lower_bound') and c.no_lower_bound:
+        if 'no_lower_bound' in c and c.no_lower_bound:
             return
-        if c.has_key('upper_bound'):
+        if 'upper_bound' in c:
             self.W.data[self.W.data > c.upper_bound] = c.upper_bound
         # CHANGE! delete very small weights
         self.W.data[self.W.data<1e-10] = 0.0
-        if c.has_key('no_prune') and c.no_prune:
+        if 'no_prune' in c and c.no_prune:
             return
         self.W.eliminate_zeros()
 
     # Structural Plasticity
     def struct_p(self):
         c = self.c
-        if c.has_key('sp_prob') and np.random.rand() < c.sp_prob:
+        if 'sp_prob' in c and np.random.rand() < c.sp_prob:
             (i,j) = _find_new(self.W,c.avoid_self_connections)
             self.struct_p_count += 1
             self.struct_p_list.append( (i,j) )
@@ -352,7 +352,7 @@ class SparseSynapticMatrix(AbstractSynapticMatrix):
 
     def stdp(self,from_old,from_new,to_old=None,to_new=None):
         c = self.c
-        if not c.has_key('eta_stdp'):
+        if 'eta_stdp' not in c:
             return
         if to_old is None:
             to_old = from_old
@@ -370,7 +370,7 @@ class SparseSynapticMatrix(AbstractSynapticMatrix):
 
     def istdp(self,y_old,x):
         c = self.c
-        if not c.has_key('eta_istdp'):
+        if 'eta_istdp' not in c:
             return
 
         N = self.W.shape[1]
@@ -385,7 +385,7 @@ class SparseSynapticMatrix(AbstractSynapticMatrix):
 
     def istdp_pos(self,y_old,x):
         c = self.c
-        if not c.has_key('eta_istdp') or c.eta_istdp <= 0.0:
+        if 'eta_istdp' not in c or c.eta_istdp <= 0.0:
             return
 
         N = self.W.shape[1]
@@ -419,12 +419,12 @@ class SparseSynapticMatrix(AbstractSynapticMatrix):
         Z = self.W.sum(1)
         if any(abs(Z-1.0)>eps):
             ind = abs(Z-1.0)>eps
-            print shape(self.W)
-            print np.where(ind)
-            print ("Difference from 1:",Z[ind]-1.0)
+            print(shape(self.W))
+            print(np.where(ind))
+            print(("Difference from 1:",Z[ind]-1.0))
             self.ss()
             Z = self.W.sum(1)
-            print ("Difference after trying to fix it:",Z[ind]-1.0)
+            print(("Difference after trying to fix it:",Z[ind]-1.0))
 
         #assert np.all(self.W.data >= 0.0)
         #assert np.all(self.W.data <= 1.0)

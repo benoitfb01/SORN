@@ -66,7 +66,7 @@ fig_1a.spines['left'].set_visible(False)
 fig_1a.spines['bottom'].set_visible(False)
 fig_1a.yaxis.set_ticks_position('left')
 fig_1a.xaxis.set_ticks_position('bottom')
-fig_1a.tick_params(axis=u'both', which=u'both',length=0)
+fig_1a.tick_params(axis='both', which='both',length=0)
 fig_1a.grid()
 
 xticks(arange(0, 4.1e6, 1e6), ['0', '1', '2', '3', '4'])
@@ -136,7 +136,7 @@ fig.text(0.55, 0.9, "B", weight="bold", \
 gcf().subplots_adjust(bottom=0.17)
 fig.subplots_adjust(wspace=.4)
 
-print 'Saving figures...',
+print('Saving figures...', end=' ')
 result_name_png = 'Fig1.pdf'
 savefig(os.path.join(result_path, result_name_png), format='pdf')
-print 'done\n\n'
+print('done\n\n')

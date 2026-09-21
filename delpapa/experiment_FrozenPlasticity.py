@@ -1,4 +1,4 @@
-from __future__ import division
+
 from pylab import *
 import utils
 utils.backup(__file__)
@@ -35,7 +35,7 @@ class Experiment_test(AbstractExperiment):
 
 
         # Initial pahse with plsaticity
-        print '\n\nInitial Phase:'
+        print('\n\nInitial Phase:')
         sorn.simulation(c.steps_plastic)
         newseed = randint(999999) # random seed
         tmpstats = sorn.stats
@@ -45,13 +45,13 @@ class Experiment_test(AbstractExperiment):
         sorn.stats = tmpstats
 
         # Reset point: next line runs the 'normal' SORN
-        print '\n\nNon-frozen steps:'
+        print('\n\nNon-frozen steps:')
         seed(newseed)
         sorn.simulation(c.steps_perturbation)
 
 
         # Return to the reset point, freezes plasticity and run again
-        print '\n\nFrozen steps:'
+        print('\n\nFrozen steps:')
         sorn = sorn.quickload(filename)
         sorn.stats = tmpstats
         sorn.stats.obj = sorn

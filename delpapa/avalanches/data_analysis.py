@@ -2,7 +2,7 @@
 # This script contains all the data analysis functions                 #
 ########################################################################
 
-from __future__ import division
+
 from pylab import *
 import scipy, scipy.stats
 
@@ -11,7 +11,7 @@ import os
 from tempfile import TemporaryFile
 
 def avalanches(activity, variable, value,
-		       Threshold = 'percent', Theta_percent = 15,
+               Threshold = 'percent', Theta_percent = 15,
                Transient = 0, fullS = False, binsize = False):
 
     # Threhold indicates which kind of activity treshold are we using
@@ -99,31 +99,31 @@ def avalanches(activity, variable, value,
     # convert to np.array cause it is easier for the other functions
     a_duration_all = asarray(a_duration_all)
     a_area_all = asarray(a_area_all)
-    print '...done'
+    print('...done')
     return a_duration_all, a_area_all
 
 ### distribution of the total activity
 # Return the average activity (as a array), and std
 def mean_activity(activity, variable, value):
 
-	distribution = zeros((len(activity), activity.max()+1))
-	for data_file in range(len(activity)):
+    distribution = zeros((len(activity), activity.max()+1))
+    for data_file in range(len(activity)):
 
         # print the % in the terminal
-		sys.stdout.write('\rcalculating activity %d%%' \
-									%(100*(data_file+1)/len(activity))),
-		sys.stdout.flush()
+        sys.stdout.write('\rcalculating activity %d%%' \
+                                    %(100*(data_file+1)/len(activity))),
+        sys.stdout.flush()
 
-		total_steps = activity[data_file].size
-		for i in range(total_steps):
-			distribution[data_file, activity[data_file, i]] += 1
-		distribution[data_file, :] /= distribution[data_file, :].sum()
+        total_steps = activity[data_file].size
+        for i in range(total_steps):
+            distribution[data_file, activity[data_file, i]] += 1
+        distribution[data_file, :] /= distribution[data_file, :].sum()
 
-	dist_mean = distribution.mean(0)
-	dist_std = distribution.std(0)
-	print '...done'
+    dist_mean = distribution.mean(0)
+    dist_std = distribution.std(0)
+    print('...done')
 
-	return dist_mean, dist_std
+    return dist_mean, dist_std
 
 ### calculate the size average as a function of the duration
 # receives the non-sorted arrays with measures of size and duration

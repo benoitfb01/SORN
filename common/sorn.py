@@ -1,16 +1,16 @@
-from __future__ import division
+
 from pylab import *
 from scipy import linalg
 import scipy.sparse as sp
 import scipy.stats as st
 
-import cPickle as pickle
+import pickle as pickle
 import gzip
 
 import utils
 utils.backup(__file__)
-from stats import StatsCollection
-from synapses import create_matrix
+from .stats import StatsCollection
+from .synapses import create_matrix
 
 #~ This contains the 
 
@@ -62,7 +62,7 @@ class Sorn(object):
         # Initialize the activation of neurons
         self.x = rand(c.N_e)<c.h_ip
         self.y = zeros(c.N_i) # CHANGE_A was rand(c.N_i)<mean(c.h_ip)
-        self.u = source.next()
+        self.u = next(source)
 
         # Initialize the pre-threshold variables
         self.R_x = zeros(c.N_e)
@@ -111,7 +111,7 @@ class Sorn(object):
             ind = argsort(x_temp)
             # the next line fails when c.h_ip == 1
             x_new = (x_temp > x_temp[ind[-expected-1]])+0
-        else:	
+        else:
             x_new = (x_temp >= 0.0)+0
             
         # New noise - prob. of each neuron being active 
@@ -139,7 +139,8 @@ class Sorn(object):
         ip(self.T_e,x_new,self.c)
         # Apply the rest only when update==true
         if self.update:
-            assert self.sane_before_update()
+            if c.get("check_sanity", True):
+                assert self.sane_before_update()
             self.W_ee.stdp(self.x,x_new)
             self.W_eu.stdp(self.u,u_new,to_old=self.x,to_new=x_new)
 
@@ -148,7 +149,8 @@ class Sorn(object):
             
             self.synaptic_scaling()
 
-            assert self.sane_after_update()
+            if c.get("check_sanity", True):
+                assert self.sane_after_update()
 
         self.x = x_new
         self.y = y_new
@@ -163,7 +165,7 @@ class Sorn(object):
         """
         self.W_ee.ss()
         self.W_ei.ss() # this was also found in the EM study
-        if self.W_eu.c.has_key('eta_stdp') and self.W_eu.c.eta_stdp>0:
+        if 'eta_stdp' in self.W_eu.c and self.W_eu.c.eta_stdp>0:
             self.W_eu.ss()
 
     def sane_before_update(self):
@@ -228,7 +230,7 @@ class Sorn(object):
         for n in range(N):
             
             # Simulation step
-            self.step(source.next())
+            self.step(next(source))
 
             # Tracking
             if 'X' in toReturn:
@@ -275,5 +277,3 @@ class Sorn(object):
                 File to load from.
         """
         return pickle.load(gzip.open(filename, 'rb'))
-
-

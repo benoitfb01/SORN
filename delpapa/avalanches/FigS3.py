@@ -35,15 +35,15 @@ subplot_letter = (-0.18, 1.05)
 # Fig. S1A,B: Fixed Spikes (power-laws and activity)
 
 experiment_name = 'FixedSpikes'
-print experiment_name
+print(experiment_name)
 
 for p in ['000', '005', '010']:
 
-    print p
+    print(p)
     data_all = np.zeros((number_of_files, 3e6))
     act_density = zeros((number_of_files, 200))
 
-    for data_file in xrange(number_of_files):
+    for data_file in range(number_of_files):
         exper = 'result.h5'
         exper_path =  ''
         h5 = tables.openFile(os.path.join(exper_path,exper),'r')
@@ -51,7 +51,7 @@ for p in ['000', '005', '010']:
         data_all[data_file] = np.around(data.activity[0] \
                                        [transient_steps:]*data.c.N_e)
 
-        for i in xrange(int(stable_steps)):
+        for i in range(int(stable_steps)):
             act_density[data_file, data_all[data_file, i]] += 1
         act_density[data_file, :] /= act_density[data_file, :].sum()
 
@@ -136,8 +136,8 @@ fig_S1b.annotate('B', xy=subplot_letter, xycoords='axes fraction', \
 fig.subplots_adjust(wspace=.2)
 gcf().subplots_adjust(bottom=0.17)
 
-print 'Saving figures...',
+print('Saving figures...', end=' ')
 result_path = '../../plots'
 result_name_png = 'FigS3.pdf'
 savefig(os.path.join(result_path, result_name_png), format = 'pdf')
-print 'done'
+print('done')

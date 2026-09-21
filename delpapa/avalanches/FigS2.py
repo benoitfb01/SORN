@@ -34,13 +34,13 @@ subplot_letter = (-0.2, 1)
 
 for experiment_name in ['iSTDPFrozen', 'AllButiSTDPFrozen']:
 
-    print experiment_name
+    print(experiment_name)
     result_path ='../Avalanche_Results/Frozen_Plasticity/' + \
                                                    experiment_name + '/'
 
     for regime in ['non-frozen', 'frozen']:
 
-        print '\n', regime
+        print('\n', regime)
         data_all = np.zeros((number_of_files, frozen_steps))
 
         for result_file in range(number_of_files):
@@ -65,7 +65,7 @@ for experiment_name in ['iSTDPFrozen', 'AllButiSTDPFrozen']:
 
         if experiment_name == 'iSTDPFrozen':
 
-            print 'Fig. S1A, B...\n'
+            print('Fig. S1A, B...\n')
 
             subplot(221)
             if regime == 'non-frozen':
@@ -135,16 +135,16 @@ fig_4b.spines['top'].set_visible(False)
 legend(loc=(0, 0), prop={'size':letter_size}, frameon=False)
 ########################################################################
 number_of_files = 36
-print 'Fig. S1C, D...\n'
+print('Fig. S1C, D...\n')
 for experiment_name in ['STDPandSPFrozen', 'iSTDPandIPFrozen']:
 
-    print experiment_name
+    print(experiment_name)
     result_path ='../Avalanche_Results/Frozen_Plasticity/' + \
                                                    experiment_name + '/'
 
     for regime in ['non-frozen', 'frozen']:
 
-        print '\n', regime
+        print('\n', regime)
         data_all = np.zeros((number_of_files, frozen_steps))
 
         for result_file in range(number_of_files):
@@ -253,8 +253,8 @@ fig_4d.annotate('D', xy=subplot_letter, xycoords='axes fraction', \
 gcf().subplots_adjust(bottom=0.17)
 fig_4.subplots_adjust(wspace=.4)
 
-print 'Saving figures...',
+print('Saving figures...', end=' ')
 result_path = '../../plots'
 result_name_png = 'FigS2.pdf'
 savefig(os.path.join(result_path, result_name_png), format = 'pdf')
-print 'done\n\n'
+print('done\n\n')

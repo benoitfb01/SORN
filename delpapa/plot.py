@@ -1,4 +1,4 @@
-from __future__ import division
+
 from pylab import *
 from scipy.optimize import curve_fit
 from scipy import stats
@@ -15,7 +15,7 @@ import datetime
 from mpl_toolkits.mplot3d import Axes3D
 from scipy.stats.stats import pearsonr
 
-import cPickle as pickle
+import pickle as pickle
 import gzip
 from common.sources import TrialSource
 import os
@@ -34,9 +34,9 @@ def plot_results(result_path,result):
         os.mkdir(plots_path)
     os.chdir(plots_path)
 
-	### Plot the connection fraction
+    ### Plot the connection fraction
     if data.__contains__('ConnectionFraction'):
-        print 'plot connectionfraction'
+        print('plot connectionfraction')
         figure()
         plot(data.ConnectionFraction[0][:data.c.N_steps[0]])
         xlabel('Time Step'); ylabel('Fraction of E-E connections')
@@ -45,7 +45,7 @@ def plot_results(result_path,result):
 
 
     if data.__contains__('activity'):
-        print 'plot activity'
+        print('plot activity')
         figure()
         activity = data.activity[0, :]
         plot(activity, 'k')
@@ -53,62 +53,62 @@ def plot_results(result_path,result):
         tight_layout()
         utils.saveplot('Activity.pdf')
 
-	### Plot the E spikes
+    ### Plot the E spikes
     ### plot the raster of the last last_n_spikes steps
     ### plot the activity of the last last_n_spikes steps
     if data.__contains__('Spikes'):
 
-        print 'plot spikes'
+        print('plot spikes')
         # raster plot (last_n_spikes)
         last_spikes = data.c.stats.only_last_spikes[0]
         spikes = data.Spikes[0, :, -last_spikes:]
         figure()
         if data.__contains__('activity'):
-			subplot(211)
+            subplot(211)
         steps = -1 # data.c.steps_plastic[0]
         for (i,sp) in enumerate(spikes):
             s_train = where(sp == 1)[0]
             if s_train != []:
-				vlines(s_train, i + 0.5, i + 1.5)
-				hold('on')
+                vlines(s_train, i + 0.5, i + 1.5)
+                hold('on')
         ylabel('Excitatory Neuron')
         ylim(0.5, i + 1.5)
 
         if data.__contains__('activity'):
-			activity = data.activity[0, -last_spikes:]
-			subplot(212)
-			plot(activity, 'k')
-			xlabel('Step'); ylabel('activity')
+            activity = data.activity[0, -last_spikes:]
+            subplot(212)
+            plot(activity, 'k')
+            xlabel('Step'); ylabel('activity')
         tight_layout()
         utils.saveplot('Raster_end.pdf')
 
     if data.__contains__('SpikesInh'):
 
-        print 'plot spikesInh'
+        print('plot spikesInh')
         last_spikes = data.c.stats.only_last_spikes[0]
         spikes = data.SpikesInh[0, :, -last_spikes:]
         figure()
         if data.__contains__('activity'):
-			subplot(211)
+            subplot(211)
         steps = -1 # data.c.steps_plastic[0]
         for (i,sp) in enumerate(spikes):
             s_train = where(sp == 1)[0]
             if s_train != []:
-				vlines(s_train, i + 0.5, i + 1.5)
-				hold('on')
+                vlines(s_train, i + 0.5, i + 1.5)
+                hold('on')
         ylabel('Inhibitory Neuron')
         ylim(0.5, i + 1.5)
         if data.__contains__('activityInh'):
-			activity = data.activityInh[0, -last_spikes:]
-			subplot(212)
-			plot(activity, 'k')
-			xlabel('Step'); ylabel('activity')
+            activity = data.activityInh[0, -last_spikes:]
+            subplot(212)
+            plot(activity, 'k')
+            xlabel('Step'); ylabel('activity')
         tight_layout()
         utils.saveplot('Raster_end_inh.pdf')
 
     ### Plot the degree distribution and the curve fit of the end weight
     if data.__contains__('endweight'):
-        print 'plot endweight'
+        print('plot endweight')
 
         N_e = data.c.N_e[0]
 
@@ -169,11 +169,11 @@ def plot_results(result_path,result):
 
     ### Plot ISIs
     if data.__contains__('ISIs'):
-        print 'plot ISIs'
+        print('plot ISIs')
 
         figure()
         ISIs = data.ISIs[0]
-        x = np.array(range(0,shape(ISIs)[1]))
+        x = np.array(list(range(0,shape(ISIs)[1])))
         y = ISIs[randint(0,shape(ISIs)[0])]
 
 
@@ -188,7 +188,7 @@ def plot_results(result_path,result):
             x_fit = x
             y_fit = y
         popt, pcov = curve_fit(exponential, x_fit, y_fit)
-        x = np.array(range(shape(ISIs)[1]))
+        x = np.array(list(range(shape(ISIs)[1])))
         fitted_y = exponential(x,*popt)
         if data.c.stats.__contains__('ISI_step'):
             plot(x[start+1:],y[start:], '.')
@@ -246,9 +246,9 @@ def plot_results_perturbation(result_path,result):
         os.mkdir(plots_path)
     os.chdir(plots_path)
 
-	### Plot the connection fraction
+    ### Plot the connection fraction
     if data.__contains__('ConnectionFraction'):
-        print 'plot connectionfraction'
+        print('plot connectionfraction')
         figure()
         non_pert_data = data.ConnectionFraction[0][:data.c.steps_plastic[0]+data.c.steps_perturbation[0]]
         pert_data = data.ConnectionFraction[0][data.c.steps_plastic[0]+data.c.steps_perturbation[0]:]
@@ -263,7 +263,7 @@ def plot_results_perturbation(result_path,result):
 
     ### plot the activity difference after the perturbation
     if data.__contains__('activity'):
-        print 'plot activity'
+        print('plot activity')
         figure()
         non_pert_act = data.activity[0][:data.c.steps_plastic[0]+data.c.steps_perturbation[0]]
         pert_act = data.activity[0][data.c.steps_plastic[0]+data.c.steps_perturbation[0]:]
@@ -275,12 +275,12 @@ def plot_results_perturbation(result_path,result):
         legend(loc='best')
         tight_layout()
 
-	### Plot the E spikes
+    ### Plot the E spikes
     ### plot the raster of the non-perturbated and perturbated spikes
     ### plot the difference of spikes
     if data.__contains__('Spikes'):
 
-        print 'plot spikes'
+        print('plot spikes')
         # raster plot (last_n_spikes)
         last_spikes = data.c.stats.only_last_spikes[0]
         non_pert_spikes = data.Spikes[0, :, -last_spikes:-last_spikes/2]

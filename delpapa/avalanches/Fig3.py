@@ -44,7 +44,7 @@ c_notstable = '#7887AB'
 ########################################################################
 # Fig. 3A: activity distribution
 
-print 'Fig. 3A...'
+print('Fig. 3A...')
 fig_3a = subplot(121)
 
 data_all = np.zeros((number_of_files, stable_steps))
@@ -58,11 +58,11 @@ for result_file in range(number_of_files):
     h5.close()
 
 act_density = zeros((number_of_files, data_all.max()+1))
-for data_file in xrange(number_of_files):
+for data_file in range(number_of_files):
 
-    print 'Activity from file ' + str(data_file+1)
+    print('Activity from file ' + str(data_file+1))
 
-    for i in xrange(int(stable_steps)):
+    for i in range(int(stable_steps)):
         act_density[data_file, data_all[data_file, i]] += 1
     act_density[data_file, :] /= act_density[data_file, :].sum()
 
@@ -92,23 +92,23 @@ yticks([0, 0.03, 0.06], \
 
 fig_3a.spines['right'].set_visible(False)
 fig_3a.spines['top'].set_visible(False)
-fig_3a.tick_params(axis=u'both', which=u'both',length=0)
+fig_3a.tick_params(axis='both', which='both',length=0)
 ########################################################################
 
 ########################################################################
 # Fig. 3B: avalanche for different Theta
 
-print 'Fig. 3B...'
+print('Fig. 3B...')
 fig_3b = subplot(122)
 
-print data_all.mean()
+print(data_all.mean())
 
 for Theta_percent in Theta_range:
-    print 'Theta = '  + str(Theta_percent) + '%'
+    print('Theta = '  + str(Theta_percent) + '%')
 
     # Theta percentile goes here
     T_data, S_data = analysis.avalanches(data_all, 'N', '200', \
-					                      Theta_percent = Theta_percent)
+                                          Theta_percent = Theta_percent)
 
     pl.plot_pdf(S_data, label =  str(Theta_percent)+ r'%', \
                                                    linewidth=line_width)
@@ -122,14 +122,14 @@ for Theta_percent in Theta_range:
     S_fit = pl.Fit(S_data, xmin=10, xmax=1500, discrete=True)
     S_alpha = S_fit.alpha
     S_sigma = S_fit.sigma
-    print 'alpha = ', T_alpha, 'sigma = ', T_sigma
-    print 'Loglikelyhood ratio (power-law/exp) =', \
+    print('alpha = ', T_alpha, 'sigma = ', T_sigma)
+    print('Loglikelyhood ratio (power-law/exp) =', \
                T_fit.distribution_compare('power_law','exponential', \
-                        normalized_ratio=True)
-    print 'tau = ', S_alpha, 'sigma = ', S_sigma
-    print 'Loglikelyhood ratio (power-law/exp) =', \
+                        normalized_ratio=True))
+    print('tau = ', S_alpha, 'sigma = ', S_sigma)
+    print('Loglikelyhood ratio (power-law/exp) =', \
                S_fit.distribution_compare('power_law','exponential', \
-                        normalized_ratio=True)
+                        normalized_ratio=True))
     ####################################################################
 
     if Theta_percent == Theta_range.min():
@@ -185,8 +185,8 @@ fig_3b.annotate('B', xy=subplot_letter, xycoords='axes fraction', \
 gcf().subplots_adjust(bottom=0.17)
 fig.subplots_adjust(wspace=.4)
 
-print 'Saving figures...',
+print('Saving figures...', end=' ')
 result_path = '../../plot'
 result_name_png = 'Fig3.pdf'
 savefig(os.path.join(result_path, result_name_png), format='pdf')
-print 'done\n\n'
+print('done\n\n')

@@ -1,4 +1,4 @@
-from __future__ import division
+
 from pylab import *
 import utils
 utils.backup(__file__)
@@ -49,14 +49,14 @@ class Experiment_test(AbstractExperiment):
         c = self.params.c
 
         #----- Input with plasticity
-        print '\nInput plastic period:'
+        print('\nInput plastic period:')
         #~ sorn.W_eu = newsource.generate_connection_e(c.N_e)
         sorn.simulation(c.steps_plastic)
 
         #----- Input without plasticity - train
 
 
-        print '\nInput training period:'
+        print('\nInput training period:')
         # Turn off plasticity
         sorn.W_ee.c.eta_stdp = 0
         sorn.W_ei.c.eta_istdp = 0
@@ -70,10 +70,10 @@ class Experiment_test(AbstractExperiment):
         sorn.simulation(c.steps_readouttrain)
 
         #----- Input without plasticity - test performance
-        print '\nInput test period:'
+        print('\nInput test period:')
         sorn.simulation(c.steps_readouttest)
 
-        print '\nAvalanche measurement period:'
+        print('\nAvalanche measurement period:')
 
         # Turn on plasticity
         sorn.W_ee.c.eta_stdp = 0.004

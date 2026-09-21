@@ -67,7 +67,7 @@ class AutoTable:
 
             tbl.extend( { 't':0.23 , 'D':np.zeros((10,10)) } )
         """
-        for name, value in valdict.items():
+        for name, value in list(valdict.items()):
             self.append(name, value)
 
     def flush(self):
@@ -140,14 +140,14 @@ class AutoTable:
         type_map = {
             np.dtype(np.float64).name : tables.Float64Atom(),
             np.dtype(np.float32).name : tables.Float32Atom(),
-            np.dtype(np.int).name     : tables.Int64Atom(),
+            np.dtype(np.int64).name   : tables.Int64Atom(),
             np.dtype(np.int8).name    : tables.Int8Atom(),
             np.dtype(np.uint8).name   : tables.UInt8Atom(),
             np.dtype(np.int16).name   : tables.Int16Atom(),
             np.dtype(np.uint16).name  : tables.UInt16Atom(),
             np.dtype(np.int32).name   : tables.Int32Atom(),
             np.dtype(np.uint32).name  : tables.UInt32Atom(),
-            np.dtype(np.bool).name    : tables.BoolAtom(),
+            np.dtype(np.bool_).name   : tables.BoolAtom(),
             # Maximal string length of 128 per string - change if needed
             'string32'                : tables.StringAtom(128)}
 
