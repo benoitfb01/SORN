@@ -1,0 +1,238 @@
+<title>N200 Exponents perc 0.25</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#FBFAF7; --panel:#FFFFFF; --ink:#23281F; --muted:#6E7466; --line:#E3E1D8;
+  --accent:#2F6B4F; --accent-ink:#245240; --hl:#EEF4EE; --hl-line:#BFD4C4;
+  --ref:#F5F4EF; --chip:#F0EFE8;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#171A16; --panel:#1E221D; --ink:#E8E7DF; --muted:#9AA091; --line:#33382F;
+    --accent:#7FBE9C; --accent-ink:#9FD4B6; --hl:#233128; --hl-line:#3C5A48;
+    --ref:#22261F; --chip:#262A23;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#171A16; --panel:#1E221D; --ink:#E8E7DF; --muted:#9AA091; --line:#33382F;
+  --accent:#7FBE9C; --accent-ink:#9FD4B6; --hl:#233128; --hl-line:#3C5A48;
+  --ref:#22261F; --chip:#262A23;
+}
+body{background:var(--bg); color:var(--ink); font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:15px; line-height:1.55; margin:0; padding:0 20px;}
+.wrap{max-width:920px; margin:0 auto; padding-block:44px 56px;}
+h1{font-family:"Source Serif 4",Georgia,serif; font-weight:700; font-size:clamp(26px,4.5vw,34px);
+  line-height:1.15; margin:0 0 6px; text-wrap:balance;}
+.sub{color:var(--muted); max-width:64ch; margin:0 0 14px;}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 26px; padding:0; list-style:none;}
+.chips li{background:var(--chip); border:1px solid var(--line); border-radius:99px;
+  padding:3px 12px; font-size:12.5px; color:var(--ink); white-space:nowrap;}
+.chips li b{font-weight:600; color:var(--accent-ink);}
+.eyebrow{font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent);
+  font-weight:600; margin:0 0 10px;}
+h2{font-family:"Source Serif 4",Georgia,serif; font-size:18px; margin:32px 0 10px;}
+.tablebox{overflow-x:auto; border:1px solid var(--line); border-radius:8px; background:var(--panel);}
+table{border-collapse:collapse; width:100%; min-width:760px;}
+th,td{padding:11px 14px; text-align:left; vertical-align:top; border-top:1px solid var(--line);}
+thead th{border-top:none; font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--muted); font-weight:600; padding-block:12px;}
+thead th .g{font-size:14px; text-transform:none; letter-spacing:0; color:var(--ink);}
+td.num,th.num{text-align:right;}
+td.num{font-family:"IBM Plex Mono",monospace; font-size:13.5px; font-variant-numeric:tabular-nums; white-space:nowrap;}
+.def{display:block; color:var(--muted); font-size:12.5px;}
+.cellhead{font-weight:600;}
+tr.hl td{background:var(--hl); border-top:1px solid var(--hl-line);}
+tr.hl + tr td{border-top:1px solid var(--hl-line);}
+tr.hl .cellhead{color:var(--accent-ink);}
+tr.ref td{background:var(--ref); color:var(--muted);}
+tr.ref td.num{color:var(--ink);}
+.cfg{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px;}
+@media (max-width:640px){.cfg{grid-template-columns:1fr;}}
+.cfgcard{border:1px solid var(--line); border-radius:8px; background:var(--panel); padding:14px 16px;}
+.cfgcard h3{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);
+  font-weight:600; margin:0 0 8px;}
+.cfgcard pre{margin:0; font-family:"IBM Plex Mono",monospace; font-size:12.5px; line-height:1.7;
+  white-space:pre; overflow-x:auto; color:var(--ink);}
+.cfgcard pre b{color:var(--accent-ink); font-weight:500;}
+.cfgnote{color:var(--muted); font-size:12.5px; margin-top:10px; max-width:78ch;}
+.reftablebox{overflow-x:auto; border:1px solid var(--line); border-radius:8px; background:var(--panel);}
+.reftablebox table{min-width:620px;}
+.notes ol{margin:0; padding-left:20px; color:var(--muted); font-size:13.5px; max-width:78ch;}
+.notes li{margin-bottom:7px;}
+.notes strong{color:var(--ink); font-weight:600;}
+.meta{color:var(--muted); font-size:13px;}
+.meta code, .sub code{font-family:"IBM Plex Mono",monospace; font-size:12px;}
+sup{font-size:10px; color:var(--accent);}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">SORN criticality &middot; avalanche statistics &middot; perc = 0.25</p>
+  <h1>Avalanche exponents on the Fig&nbsp;2 N&nbsp;=&nbsp;200 dataset, perc&nbsp;=&nbsp;0.25</h1>
+  <p class="sub">Same grid as the earlier perc&nbsp;=&nbsp;0.5 table, with the percentile threshold lowered
+  to the 25th percentile of population activity. The adaptive (half-mean) rows are unchanged &mdash; that
+  mode does not use <code>AV_PERC</code>. Fitted with the <code>criticality_tumbleweed</code> pipeline
+  (<code>criticality/analysis.py</code>); the last row is Del&nbsp;Papa&rsquo;s original pipeline run on the
+  identical data.</p>
+  <ul class="chips">
+    <li><b>N = 200</b> excitatory neurons</li>
+    <li><b>h<sub>ip</sub> = 0.1</b></li>
+    <li><b>Fig 2 parameters</b> (param_Zheng2013)</li>
+    <li><b>50 runs</b> &times; 5&times;10<sup>6</sup> steps</li>
+    <li><b>window:</b> steps 2&ndash;5&times;10<sup>6</sup></li>
+  </ul>
+
+  <div class="tablebox">
+    <table>
+      <thead>
+        <tr>
+          <th>Avalanche threshold &theta;<sup>1</sup></th>
+          <th>Fit window<sup>2</sup> (size / duration)</th>
+          <th class="num">Pooled events</th>
+          <th class="num"><span class="g">&alpha;</span> &middot; size</th>
+          <th class="num"><span class="g">&beta;</span> &middot; duration</th>
+          <th class="num">DCC<sup>3</sup></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="cellhead">25th-percentile activity</span><span class="def">&theta; per-run 12&ndash;17; perc&nbsp;=&nbsp;0.25</span></td>
+          <td><span class="cellhead">Automatic</span><span class="def">KS search &rarr; 8&ndash;750 / 8&ndash;296</span></td>
+          <td class="num">18,118,280</td>
+          <td class="num">1.496</td>
+          <td class="num">2.421</td>
+          <td class="num">1.78</td>
+        </tr>
+        <tr>
+          <td><span class="cellhead">25th-percentile activity</span><span class="def">&theta; per-run 12&ndash;17; perc&nbsp;=&nbsp;0.25</span></td>
+          <td><span class="cellhead">Manual, paper&rsquo;s</span><span class="def">10&ndash;1500 / 6&ndash;60</span></td>
+          <td class="num">18,118,280</td>
+          <td class="num">1.579</td>
+          <td class="num">2.164</td>
+          <td class="num">0.69</td>
+        </tr>
+        <tr>
+          <td><span class="cellhead">Half mean activity</span><span class="def">&theta; = 10 on every run; Del&nbsp;Papa convention</span></td>
+          <td><span class="cellhead">Automatic</span><span class="def">KS search &rarr; 10&ndash;1558 / 2&ndash;767</span></td>
+          <td class="num">8,500,289</td>
+          <td class="num">1.229</td>
+          <td class="num">1.469</td>
+          <td class="num">1.04</td>
+        </tr>
+        <tr class="hl">
+          <td><span class="cellhead">Half mean activity</span><span class="def">&theta; = 10 on every run; Del&nbsp;Papa convention</span></td>
+          <td><span class="cellhead">Manual, paper&rsquo;s</span><span class="def">10&ndash;1500 / 6&ndash;60</span></td>
+          <td class="num">8,500,289</td>
+          <td class="num">1.22751</td>
+          <td class="num">1.34336</td>
+          <td class="num">0.27</td>
+        </tr>
+        <tr class="ref">
+          <td><span class="cellhead">Del Papa (original pipeline)</span><span class="def">&theta; = &lsquo;half&rsquo; &rarr; 10; Python&nbsp;2, <code>powerlaw</code> package</span></td>
+          <td><span class="cellhead">Manual, paper&rsquo;s</span><span class="def">10&ndash;1500 / 6&ndash;60</span></td>
+          <td class="num">8,500,289</td>
+          <td class="num">1.22751</td>
+          <td class="num">1.34334</td>
+          <td class="num">&mdash;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Exact configuration (criticality/analysis.py)</h2>
+  <div class="cfg">
+    <div class="cfgcard">
+      <h3>Shared by all four cells</h3>
+      <pre>
+USE_SPIKES_RASTER      = <b>False</b>
+ANALYSIS_WINDOW        = <b>[2_000_000, 5_000_000)</b>
+SIZE_FIT_RANGE         = <b>(10, 1500)</b>   # manual rows
+DUR_FIT_RANGE          = <b>(6, 60)</b>      # manual rows
+AV_FLAG                = <b>1</b>            # exponents + DCC
+AV_BM, AV_TM           = <b>20, 10</b>       # xmin search caps
+AV_NFACTOR_BM/_TM      = <b>0, 0</b>
+AV_NFACTOR_BM_TAIL     = <b>0.8</b>
+AV_NFACTOR_TM_TAIL     = <b>1.0</b>
+AV_EXCLUDE             = <b>True</b>  (50/20, 20/10; not triggered)
+BRANCHING_KMAX         = <b>50</b>  fitfuncs = <b>["exp","complex"]</b>
+DFA_NVALS              = <b>logarithmic_r(100, 100000, 2.0)</b></pre>
+    </div>
+    <div class="cfgcard">
+      <h3>Per threshold run</h3>
+      <pre>
+# rows 1&ndash;2  (percentile threshold)
+AV_THRESHOLD_MODE        = <b>"perc"</b>
+AV_PERC                  = <b>0.25</b>
+
+# rows 3&ndash;4  (half-mean threshold)
+AV_THRESHOLD_MODE        = <b>"adaptive"</b>
+ADAPTIVE_THRESHOLD_FRAC  = <b>0.5</b></pre>
+      <p class="cfgnote"><code>USE_SPIKES_RASTER = False</code> because the Fig&nbsp;2 files store only the
+      last 1000 steps of the spike raster; all metrics are computed from the full-length population
+      activity (<code>activity &times; N</code>), the same signal Del&nbsp;Papa&rsquo;s Fig&nbsp;2 analysis uses.
+      Everything not listed is the upstream <code>analysis.py</code> default, unchanged.</p>
+    </div>
+  </div>
+
+  <h2>Del Papa reference values (same 50 files, original pipeline)</h2>
+  <div class="reftablebox">
+    <table>
+      <thead>
+        <tr>
+          <th>Quantity</th>
+          <th>Fit range</th>
+          <th class="num">Value</th>
+          <th class="num">Tumbleweed, matched<sup>4</sup></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="cellhead">&alpha; &middot; size power law</span><span class="def">&theta; = &lsquo;half&rsquo; &rarr; 10</span></td>
+          <td class="num">10 &ndash; 1500</td>
+          <td class="num">1.227506</td>
+          <td class="num">1.227512</td>
+        </tr>
+        <tr>
+          <td><span class="cellhead">&beta; &middot; duration power law</span><span class="def">&theta; = &lsquo;half&rsquo; &rarr; 10</span></td>
+          <td class="num">6 &ndash; 60</td>
+          <td class="num">1.343342</td>
+          <td class="num">1.343357</td>
+        </tr>
+        <tr>
+          <td><span class="cellhead">Predicted &lang;S&rang;&nbsp;&sim;&nbsp;T<sup>&#x1D465;</sup> exponent</span><span class="def">(&beta;&minus;1)/(&alpha;&minus;1)</span></td>
+          <td class="num">&mdash;</td>
+          <td class="num">1.509158</td>
+          <td class="num">1.509185</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="meta" style="margin-top:10px;">Reference = Del&nbsp;Papa&rsquo;s original avalanche analysis
+  (Python&nbsp;2.7.18, <code>powerlaw</code> package, <code>Fig2.py</code>/<code>data_analysis.py</code>) run on
+  these exact 50 result files; values from its <code>fit_parameters.json</code>.</p>
+
+  <h2>Method notes</h2>
+  <div class="notes">
+    <ol>
+      <li><strong>Avalanche definition</strong> (identical in both pipelines): an avalanche is a run of consecutive
+      time steps with population activity strictly above &theta;; duration T = number of steps, size
+      S = &Sigma;(activity &minus; &theta;) over those steps. Avalanches are detected <strong>per run</strong>, then the
+      size/duration events are pooled across the 50 runs into one fit &mdash; raw traces are never concatenated,
+      so no artificial avalanche bridges two simulations.</li>
+      <li><strong>Exponents</strong> are discrete power-law MLE fits (tumbleweed&rsquo;s <code>tplfit</code> estimator).
+      &ldquo;Automatic&rdquo; lets the pipeline pick x<sub>min</sub>/x<sub>max</sub> by a Kolmogorov&ndash;Smirnov
+      search; &ldquo;manual&rdquo; fixes them to the windows hand-chosen in the paper.</li>
+      <li><strong>DCC</strong> (deviation from crackling): |(&beta;&minus;1)/(&alpha;&minus;1) &minus; measured
+      slope of log&nbsp;&lang;S&rang;(T)| over the duration window; smaller is closer to the scaling relation.</li>
+      <li><strong>Agreement</strong>: with threshold and windows matched, the two toolchains (tumbleweed MLE vs the
+      <code>powerlaw</code> package) agree to 4&ndash;5 decimal places on both exponents &mdash; they measure the same
+      thing; the spread across the grid above is entirely the threshold and window choices. The earlier
+      perc&nbsp;=&nbsp;0.5 (median-threshold) grid gave &alpha;&nbsp;=&nbsp;2.096/1.885 and
+      &beta;&nbsp;=&nbsp;2.823/2.790 (auto/manual) on 21,093,357 events &mdash; lowering the percentile from the
+      median toward the paper&rsquo;s &theta; moves the exponents toward the Del&nbsp;Papa values, as expected.</li>
+    </ol>
+    <p class="meta" style="margin-top:14px;">Reproducibility: the adaptive-threshold pooled fits are byte-identical
+    across three independent executions; the pipeline is deterministic apart from the per-run DFA column
+    (unseeded RANSAC fit in <code>nolds</code>). Per-run branching ratio on this data:
+    0.881&nbsp;&plusmn;&nbsp;0.083 (mrestimator, exponential fit), threshold-independent.</p>
+  </div>
+</div>
