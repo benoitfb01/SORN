@@ -176,6 +176,17 @@ def load_sim(h5path):
         raster = f["Spikes"][0].astype(bool) if has_raster else None  # (N_e, T_saved)
         activity = f["activity"][0]  # (N_steps_total,) -- always the full run, starts at step 0
 
+    # activity must be the full run for window indices to apply -- guards
+    # against files saved with activity subsampling (c.stats.only_last),
+    # where slicing would silently pick the wrong steps
+    if len(activity) != N_steps_total:
+        sys.exit(
+            f"ERROR: {h5path} stores 'activity' with {len(activity)} entries but "
+            f"c/N_steps = {N_steps_total} -- the run was probably saved with activity "
+            f"subsampling (c.stats.only_last), so the analysis window would silently "
+            f"pick the wrong steps. Re-run the simulation saving the full activity trace."
+        )
+
     # activity always starts at absolute step 0, so window indices apply directly
     a_start = max(ANALYSIS_WINDOW_START, 0)
     a_end = min(ANALYSIS_WINDOW_END, N_steps_total)

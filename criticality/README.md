@@ -39,7 +39,9 @@ dataset requires:
    With `USE_SPIKES_RASTER = True`, `load_sim` requires the raster to
    cover the exact analysis window that `activity` is analyzed on, and
    exits with a clean error otherwise (instead of upstream's silent
-   warning). Same safeguard as `analysis_fixed.py` / `analysis_fixed_fits.py`.
+   warning). `load_sim` also verifies the stored `activity` covers the
+   full run (guards against `c.stats.only_last` subsampling). Same
+   safeguards as `analysis_fixed.py` / `analysis_fixed_fits.py`.
 4. **Output location**: `criticality/output_<threshold mode>/` (e.g.
    `output_perc/`, `output_adaptive/`) instead of under the sweep root, so
    runs with different avalanche thresholds don't overwrite each other.
